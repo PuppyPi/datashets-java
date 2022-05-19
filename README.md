@@ -1,2 +1,2 @@
-# datashets-simple-java
-API and Data Model for Simple Datashets :>
+# datashets-java
+API and Data Model for Datashets :>
