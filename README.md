@@ -1,2 +1,2 @@
 # datashets-java
-API and Data Model for Datashets in Java :>
+The Datashets Core Model / API in Java!
