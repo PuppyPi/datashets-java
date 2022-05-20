@@ -211,7 +211,7 @@ public class DatashetsTable
 	 */
 	public @Nonnull List<String> getMultiCell(@Nonnull String columnUID, int rowIndex) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
-		return getMultiCell(columnsSingleValued.requireIndexByUID(columnUID), rowIndex);
+		return getMultiCell(columnsMultiValued.requireIndexByUID(columnUID), rowIndex);
 	}
 	
 	/**
@@ -222,7 +222,7 @@ public class DatashetsTable
 	 */
 	public void setMultiCell(@Nonnull String columnUID, int rowIndex, List<String> value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
-		setMultiCell(columnsSingleValued.requireIndexByUID(columnUID), rowIndex, value);
+		setMultiCell(columnsMultiValued.requireIndexByUID(columnUID), rowIndex, value);
 	}
 	
 	
@@ -305,7 +305,7 @@ public class DatashetsTable
 	 */
 	public @Nonnull List<String> getMultiCell(@Nonnull String columnUID, DatashetsUsedRow row) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
-		return getMultiCell(columnsSingleValued.requireIndexByUID(columnUID), row);
+		return getMultiCell(columnsMultiValued.requireIndexByUID(columnUID), row);
 	}
 	
 	/**
@@ -315,7 +315,7 @@ public class DatashetsTable
 	 */
 	public void setMultiCell(@Nonnull String columnUID, DatashetsUsedRow row, List<String> value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
-		setMultiCell(columnsSingleValued.requireIndexByUID(columnUID), row, value);
+		setMultiCell(columnsMultiValued.requireIndexByUID(columnUID), row, value);
 	}
 	
 	
