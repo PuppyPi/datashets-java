@@ -4,7 +4,7 @@ import java.io.IOException;
 import javax.annotation.Nullable;
 import rebound.datashets.api.model.DatashetsTableContents;
 
-public interface DatashetConnection
+public interface DatashetsConnection
 {
 	/**
 	 * @param performMaintenance  if true, errors and things may be fixed, false it's a truly readonly operation!
