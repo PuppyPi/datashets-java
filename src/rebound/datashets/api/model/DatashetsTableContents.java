@@ -10,9 +10,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Note: while row indexes match up perfectly with the Google Sheet (after the frozen header rows), column indexes certainly don't generally!!<br>
+ * Note: while row indexes match up perfectly with the underlying thing if there is such a thing (after the frozen header rows), column indexes certainly don't generally!!<br>
  * They're only useful here in this object!<br>
  * (I mean there are two different kinds that both start at zero so that could never be XD )<br>
+ * 
+ * + The {@link String}s in single-value cells are {@link Nullable} but not inside multivalue cell {@link List}s.  The lists are however able to be empty.
  */
 public class DatashetsTableContents
 {
@@ -113,6 +115,10 @@ public class DatashetsTableContents
 	
 	
 	
+	
+	
+	
+	
 	/**
 	 * @param columnIndex  starts at 0
 	 * @param rowIndex  starts at 0
@@ -205,6 +211,109 @@ public class DatashetsTableContents
 	{
 		setMultiCell(columnsSingleValued.requireIndexByUID(columnUID), rowIndex, value);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * @param columnIndex  starts at 0
+	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
+	 */
+	public @Nullable String getCell(int columnIndex, DatashetsRow row) throws IndexOutOfBoundsException
+	{
+		return row.getSingleValuedColumns().get(columnIndex);
+	}
+	
+	/**
+	 * @param columnIndex  starts at 0
+	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
+	 */
+	public void setCell(int columnIndex, DatashetsRow row, @Nullable String value) throws IndexOutOfBoundsException
+	{
+		requireNonNull(value);
+		row.getSingleValuedColumns().set(columnIndex, value);
+	}
+	
+	
+	/**
+	 * @param columnUID  case insensitive (auto uppercased)
+	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
+	 * @throws IndexOutOfBoundsException  if row is too small or large
+	 */
+	public @Nullable String getCell(@Nonnull String columnUID, DatashetsRow row) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	{
+		return getCell(columnsSingleValued.requireIndexByUID(columnUID), row);
+	}
+	
+	/**
+	 * @param columnUID  case insensitive (auto uppercased)
+	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
+	 * @throws IndexOutOfBoundsException  if row is too small or large
+	 */
+	public void setCell(@Nonnull String columnUID, DatashetsRow row, @Nullable String value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	{
+		setCell(columnsSingleValued.requireIndexByUID(columnUID), row, value);
+	}
+	
+	
+	
+	/**
+	 * The lists of multivalue "cells" are generally writable and mutable (eg, {@link ArrayList}s not {@link Arrays#asList(Object...)}s)
+	 * But it's up to you if you put fixed-length or otherwise readonly implementations in the {@link DatashetsRow}s ofc!  (eg, with {@link #setMultiCell(int, int, List)})
+	 * @param columnIndex  starts at 0
+	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
+	 */
+	public @Nonnull List<String> getMultiCell(int columnIndex, DatashetsRow row) throws IndexOutOfBoundsException
+	{
+		return row.getMultiValuedColumns().get(columnIndex);
+	}
+	
+	/**
+	 * @param columnIndex  starts at 0
+	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
+	 */
+	public void setMultiCell(int columnIndex, DatashetsRow row, @Nonnull List<String> value) throws IndexOutOfBoundsException
+	{
+		row.getMultiValuedColumns().set(columnIndex, value);
+	}
+	
+	
+	/**
+	 * The lists of multivalue "cells" are generally writable and mutable (eg, {@link ArrayList}s not {@link Arrays#asList(Object...)}s)
+	 * But it's up to you if you put fixed-length or otherwise readonly implementations in the {@link DatashetsRow}s ofc!  (eg, with {@link #setMultiCell(String, int, List)})
+	 * @param columnUID  case insensitive (auto uppercased)
+	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
+	 * @throws IndexOutOfBoundsException  if row is too small or large
+	 */
+	public @Nonnull List<String> getMultiCell(@Nonnull String columnUID, DatashetsRow row) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	{
+		return getMultiCell(columnsSingleValued.requireIndexByUID(columnUID), row);
+	}
+	
+	/**
+	 * @param columnUID  case insensitive (auto uppercased)
+	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
+	 * @throws IndexOutOfBoundsException  if row is too small or large
+	 */
+	public void setMultiCell(@Nonnull String columnUID, DatashetsRow row, List<String> value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	{
+		setMultiCell(columnsSingleValued.requireIndexByUID(columnUID), row, value);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
