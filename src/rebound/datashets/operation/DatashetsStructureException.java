@@ -1,4 +1,4 @@
-package rebound.datashets.agent;
+package rebound.datashets.operation;
 
 public class DatashetsStructureException
 extends RuntimeException
