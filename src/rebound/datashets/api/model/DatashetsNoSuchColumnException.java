@@ -1,4 +1,4 @@
-package rebound.datashets.model;
+package rebound.datashets.api.model;
 
 public class DatashetsNoSuchColumnException
 extends RuntimeException

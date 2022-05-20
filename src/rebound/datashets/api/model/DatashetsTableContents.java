@@ -1,4 +1,4 @@
-package rebound.datashets.model;
+package rebound.datashets.api.model;
 
 import static java.util.Arrays.*;
 import static java.util.Objects.*;

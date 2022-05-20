@@ -1,8 +1,8 @@
-package rebound.datashets.operation;
+package rebound.datashets.api.operation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import rebound.datashets.model.DatashetsTableContents;
+import rebound.datashets.api.model.DatashetsTableContents;
 
 @FunctionalInterface
 public interface DatashetsOperation

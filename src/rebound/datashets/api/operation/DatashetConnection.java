@@ -1,8 +1,8 @@
-package rebound.datashets.operation;
+package rebound.datashets.api.operation;
 
 import java.io.IOException;
 import javax.annotation.Nullable;
-import rebound.datashets.model.DatashetsTableContents;
+import rebound.datashets.api.model.DatashetsTableContents;
 
 public interface DatashetConnection
 {

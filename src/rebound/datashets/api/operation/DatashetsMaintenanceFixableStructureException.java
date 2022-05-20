@@ -1,4 +1,4 @@
-package rebound.datashets.operation;
+package rebound.datashets.api.operation;
 
 /**
  * This is a {@link DatashetsStructureException} that wouldn't have been thrown if "performMaintenance" was true!  (ie, if we were allowed to fix structure errors that can be automatically fixed)
