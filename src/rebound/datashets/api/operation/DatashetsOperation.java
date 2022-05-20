@@ -2,7 +2,7 @@ package rebound.datashets.api.operation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import rebound.datashets.api.model.DatashetsTableContents;
+import rebound.datashets.api.model.DatashetsTable;
 
 @FunctionalInterface
 public interface DatashetsOperation
@@ -12,5 +12,5 @@ public interface DatashetsOperation
 	 * @return null meaning don't write anything, otherwise it may be the same Java Object (referencewise identical) as was given to it or not!  (whatever is return is only used briefly, then forgotten once {@link DatashetsConnection#perform(boolean, DatashetsOperation)} or similar returns, so feel free to keep hold of it afterward or have brought it in from beforehand!)
 	 * @throws RuntimeException  anything thrown by this will be caught and handled properly (maintenance will write its changes, but no client code changes will be written)
 	 */
-	public @Nullable DatashetsTableContents performInMemory(@Nonnull DatashetsTableContents data) throws RuntimeException;
+	public @Nullable DatashetsTable performInMemory(@Nonnull DatashetsTable data) throws RuntimeException;
 }

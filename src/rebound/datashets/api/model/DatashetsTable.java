@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * 
  * + The {@link String}s in single-value cells are {@link Nullable} but not inside multivalue cell {@link List}s.  The lists are however able to be empty.
  */
-public class DatashetsTableContents
+public class DatashetsTable
 {
 	protected final @Nonnull DatashetsSemanticColumns columnsSingleValued;
 	protected final @Nonnull DatashetsSemanticColumns columnsMultiValued;
@@ -24,12 +24,12 @@ public class DatashetsTableContents
 	protected List<DatashetsRow> rows;
 	
 	
-	public DatashetsTableContents(List<String> columnUIDsSingleValued, List<String> columnUIDsMultiValued)
+	public DatashetsTable(List<String> columnUIDsSingleValued, List<String> columnUIDsMultiValued)
 	{
 		this(new DatashetsSemanticColumns(columnUIDsSingleValued), new DatashetsSemanticColumns(columnUIDsMultiValued));
 	}
 	
-	public DatashetsTableContents(DatashetsSemanticColumns columnsSingleValued, DatashetsSemanticColumns columnsMultiValued)
+	public DatashetsTable(DatashetsSemanticColumns columnsSingleValued, DatashetsSemanticColumns columnsMultiValued)
 	{
 		this(columnsSingleValued, columnsMultiValued, new ArrayList<>());
 	}
@@ -38,7 +38,7 @@ public class DatashetsTableContents
 	 * + Note that there can't be any overlap between the UIDs of single and multi value column-sets!
 	 * @param rows  this will be kept as a live reference!  (you can set it to null briefly, but make sure to {@link #setRows(List) set it} to something sensible before it's used!!)
 	 */
-	public DatashetsTableContents(@Nonnull DatashetsSemanticColumns columnsSingleValued, @Nonnull DatashetsSemanticColumns columnsMultiValued, List<DatashetsRow> rows)
+	public DatashetsTable(@Nonnull DatashetsSemanticColumns columnsSingleValued, @Nonnull DatashetsSemanticColumns columnsMultiValued, List<DatashetsRow> rows)
 	{
 		requireNonNull(columnsSingleValued);
 		requireNonNull(columnsMultiValued);
