@@ -341,15 +341,15 @@ public class DatashetsTable
 	 * <br>
 	 * The lists in multivalued columns will be writable but (initially) empty lists.<br>
 	 */
-	public DatashetsUsedRow addRow()
+	public DatashetsUsedRow addUsedRow()
 	{
-		return addRow(null);
+		return addUsedRow(null);
 	}
 	
 	/**
-	 * Like {@link #addRow()} but you get to set the value of newly-created cells (single-valued ones; multi-valued ones still start with each their own separate empty mutable list)
+	 * Like {@link #addUsedRow()} but you get to set the value of newly-created cells (single-valued ones; multi-valued ones still start with each their own separate empty mutable list)
 	 */
-	public DatashetsUsedRow addRow(@Nullable String newSingleValuedCellValues)
+	public DatashetsUsedRow addUsedRow(@Nullable String newSingleValuedCellValues)
 	{
 		DatashetsUsedRow row = new DatashetsUsedRow();
 		
