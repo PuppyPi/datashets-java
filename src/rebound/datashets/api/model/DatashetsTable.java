@@ -111,6 +111,19 @@ public class DatashetsTable
 		this.rows = rows;
 	}
 	
+	/**
+	 * @param rowIndex  starts at 0
+	 * @throws IndexOutOfBoundsException  if rowIndex is too small or large
+	 */
+	public DatashetsUsedRow getUsedRow(int rowIndex) throws IndexOutOfBoundsException, DatashetsUnusedRowException
+	{
+		DatashetsRow row = rows.get(rowIndex);
+		if (row instanceof DatashetsUsedRow)
+			return (DatashetsUsedRow)row;
+		else
+			throw new DatashetsUnusedRowException("at rows["+rowIndex+"]");
+	}
+	
 	
 	
 	
@@ -124,9 +137,9 @@ public class DatashetsTable
 	 * @param rowIndex  starts at 0
 	 * @throws IndexOutOfBoundsException  if columnIndex or rowIndex is too small or large
 	 */
-	public @Nullable String getCell(int columnIndex, int rowIndex) throws IndexOutOfBoundsException
+	public @Nullable String getCell(int columnIndex, int rowIndex) throws IndexOutOfBoundsException, DatashetsUnusedRowException
 	{
-		return rows.get(rowIndex).getSingleValuedColumns().get(columnIndex);
+		return getUsedRow(rowIndex).getSingleValuedColumns().get(columnIndex);
 	}
 	
 	/**
@@ -134,10 +147,10 @@ public class DatashetsTable
 	 * @param rowIndex  starts at 0
 	 * @throws IndexOutOfBoundsException  if columnIndex or rowIndex is too small or large
 	 */
-	public void setCell(int columnIndex, int rowIndex, @Nullable String value) throws IndexOutOfBoundsException
+	public void setCell(int columnIndex, int rowIndex, @Nullable String value) throws IndexOutOfBoundsException, DatashetsUnusedRowException
 	{
 		requireNonNull(value);
-		rows.get(rowIndex).getSingleValuedColumns().set(columnIndex, value);
+		getUsedRow(rowIndex).getSingleValuedColumns().set(columnIndex, value);
 	}
 	
 	
@@ -147,7 +160,7 @@ public class DatashetsTable
 	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
 	 * @throws IndexOutOfBoundsException  if rowIndex is too small or large
 	 */
-	public @Nullable String getCell(@Nonnull String columnUID, int rowIndex) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	public @Nullable String getCell(@Nonnull String columnUID, int rowIndex) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException, DatashetsUnusedRowException
 	{
 		return getCell(columnsSingleValued.requireIndexByUID(columnUID), rowIndex);
 	}
@@ -158,7 +171,7 @@ public class DatashetsTable
 	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
 	 * @throws IndexOutOfBoundsException  if rowIndex is too small or large
 	 */
-	public void setCell(@Nonnull String columnUID, int rowIndex, @Nullable String value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	public void setCell(@Nonnull String columnUID, int rowIndex, @Nullable String value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException, DatashetsUnusedRowException
 	{
 		setCell(columnsSingleValued.requireIndexByUID(columnUID), rowIndex, value);
 	}
@@ -174,7 +187,7 @@ public class DatashetsTable
 	 */
 	public @Nonnull List<String> getMultiCell(int columnIndex, int rowIndex) throws IndexOutOfBoundsException
 	{
-		return rows.get(rowIndex).getMultiValuedColumns().get(columnIndex);
+		return getUsedRow(rowIndex).getMultiValuedColumns().get(columnIndex);
 	}
 	
 	/**
@@ -184,7 +197,7 @@ public class DatashetsTable
 	 */
 	public void setMultiCell(int columnIndex, int rowIndex, @Nonnull List<String> value) throws IndexOutOfBoundsException
 	{
-		rows.get(rowIndex).getMultiValuedColumns().set(columnIndex, value);
+		getUsedRow(rowIndex).getMultiValuedColumns().set(columnIndex, value);
 	}
 	
 	
@@ -224,7 +237,7 @@ public class DatashetsTable
 	 * @param columnIndex  starts at 0
 	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
 	 */
-	public @Nullable String getCell(int columnIndex, DatashetsRow row) throws IndexOutOfBoundsException
+	public @Nullable String getCell(int columnIndex, DatashetsUsedRow row) throws IndexOutOfBoundsException
 	{
 		return row.getSingleValuedColumns().get(columnIndex);
 	}
@@ -233,7 +246,7 @@ public class DatashetsTable
 	 * @param columnIndex  starts at 0
 	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
 	 */
-	public void setCell(int columnIndex, DatashetsRow row, @Nullable String value) throws IndexOutOfBoundsException
+	public void setCell(int columnIndex, DatashetsUsedRow row, @Nullable String value) throws IndexOutOfBoundsException
 	{
 		requireNonNull(value);
 		row.getSingleValuedColumns().set(columnIndex, value);
@@ -245,7 +258,7 @@ public class DatashetsTable
 	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
 	 * @throws IndexOutOfBoundsException  if row is too small or large
 	 */
-	public @Nullable String getCell(@Nonnull String columnUID, DatashetsRow row) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	public @Nullable String getCell(@Nonnull String columnUID, DatashetsUsedRow row) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
 		return getCell(columnsSingleValued.requireIndexByUID(columnUID), row);
 	}
@@ -255,7 +268,7 @@ public class DatashetsTable
 	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
 	 * @throws IndexOutOfBoundsException  if row is too small or large
 	 */
-	public void setCell(@Nonnull String columnUID, DatashetsRow row, @Nullable String value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	public void setCell(@Nonnull String columnUID, DatashetsUsedRow row, @Nullable String value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
 		setCell(columnsSingleValued.requireIndexByUID(columnUID), row, value);
 	}
@@ -264,11 +277,11 @@ public class DatashetsTable
 	
 	/**
 	 * The lists of multivalue "cells" are generally writable and mutable (eg, {@link ArrayList}s not {@link Arrays#asList(Object...)}s)
-	 * But it's up to you if you put fixed-length or otherwise readonly implementations in the {@link DatashetsRow}s ofc!  (eg, with {@link #setMultiCell(int, int, List)})
+	 * But it's up to you if you put fixed-length or otherwise readonly implementations in the {@link DatashetsUsedRow}s ofc!  (eg, with {@link #setMultiCell(int, int, List)})
 	 * @param columnIndex  starts at 0
 	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
 	 */
-	public @Nonnull List<String> getMultiCell(int columnIndex, DatashetsRow row) throws IndexOutOfBoundsException
+	public @Nonnull List<String> getMultiCell(int columnIndex, DatashetsUsedRow row) throws IndexOutOfBoundsException
 	{
 		return row.getMultiValuedColumns().get(columnIndex);
 	}
@@ -277,7 +290,7 @@ public class DatashetsTable
 	 * @param columnIndex  starts at 0
 	 * @throws IndexOutOfBoundsException  if columnIndex or row is too small or large
 	 */
-	public void setMultiCell(int columnIndex, DatashetsRow row, @Nonnull List<String> value) throws IndexOutOfBoundsException
+	public void setMultiCell(int columnIndex, DatashetsUsedRow row, @Nonnull List<String> value) throws IndexOutOfBoundsException
 	{
 		row.getMultiValuedColumns().set(columnIndex, value);
 	}
@@ -285,12 +298,12 @@ public class DatashetsTable
 	
 	/**
 	 * The lists of multivalue "cells" are generally writable and mutable (eg, {@link ArrayList}s not {@link Arrays#asList(Object...)}s)
-	 * But it's up to you if you put fixed-length or otherwise readonly implementations in the {@link DatashetsRow}s ofc!  (eg, with {@link #setMultiCell(String, int, List)})
+	 * But it's up to you if you put fixed-length or otherwise readonly implementations in the {@link DatashetsUsedRow}s ofc!  (eg, with {@link #setMultiCell(String, int, List)})
 	 * @param columnUID  case insensitive (auto uppercased)
 	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
 	 * @throws IndexOutOfBoundsException  if row is too small or large
 	 */
-	public @Nonnull List<String> getMultiCell(@Nonnull String columnUID, DatashetsRow row) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	public @Nonnull List<String> getMultiCell(@Nonnull String columnUID, DatashetsUsedRow row) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
 		return getMultiCell(columnsSingleValued.requireIndexByUID(columnUID), row);
 	}
@@ -300,7 +313,7 @@ public class DatashetsTable
 	 * @throws DatashetsNoSuchColumnException  if there is no single-valued column by that uid
 	 * @throws IndexOutOfBoundsException  if row is too small or large
 	 */
-	public void setMultiCell(@Nonnull String columnUID, DatashetsRow row, List<String> value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
+	public void setMultiCell(@Nonnull String columnUID, DatashetsUsedRow row, List<String> value) throws DatashetsNoSuchColumnException, IndexOutOfBoundsException
 	{
 		setMultiCell(columnsSingleValued.requireIndexByUID(columnUID), row, value);
 	}
@@ -328,7 +341,7 @@ public class DatashetsTable
 	 * <br>
 	 * The lists in multivalued columns will be writable but (initially) empty lists.<br>
 	 */
-	public DatashetsRow addRow()
+	public DatashetsUsedRow addRow()
 	{
 		return addRow(null);
 	}
@@ -336,9 +349,9 @@ public class DatashetsTable
 	/**
 	 * Like {@link #addRow()} but you get to set the value of newly-created cells (single-valued ones; multi-valued ones still start with each their own separate empty mutable list)
 	 */
-	public DatashetsRow addRow(@Nullable String newSingleValuedCellValues)
+	public DatashetsUsedRow addRow(@Nullable String newSingleValuedCellValues)
 	{
-		DatashetsRow row = new DatashetsRow();
+		DatashetsUsedRow row = new DatashetsUsedRow();
 		
 		String[] s = new String[getNumberOfColumnsSingleValued()];
 		List<String>[] m = new List[getNumberOfColumnsMultiValued()];
@@ -354,6 +367,15 @@ public class DatashetsTable
 		
 		return row;
 	}
+	
+	
+	public DatashetsUnusedRow addUnusedRow()
+	{
+		DatashetsUnusedRow row = new DatashetsUnusedRow();
+		rows.add(row);
+		return row;
+	}
+	
 	
 	
 	
