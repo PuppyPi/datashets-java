@@ -5,6 +5,7 @@ import static java.util.Objects.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -15,8 +16,8 @@ import javax.annotation.Nullable;
  */
 public class DatashetsTableContents
 {
-	protected final DatashetsSemanticColumns columnsSingleValued;
-	protected final DatashetsSemanticColumns columnsMultiValued;
+	protected final @Nonnull DatashetsSemanticColumns columnsSingleValued;
+	protected final @Nonnull DatashetsSemanticColumns columnsMultiValued;
 	
 	protected List<DatashetsRow> rows;
 	
@@ -32,10 +33,18 @@ public class DatashetsTableContents
 	}
 	
 	/**
-	 * @param rows  this will be kept as a live reference!
+	 * + Note that there can't be any overlap between the UIDs of single and multi value column-sets!
+	 * @param rows  this will be kept as a live reference!  (you can set it to null briefly, but make sure to {@link #setRows(List) set it} to something sensible before it's used!!)
 	 */
-	public DatashetsTableContents(DatashetsSemanticColumns columnsSingleValued, DatashetsSemanticColumns columnsMultiValued, List<DatashetsRow> rows)
+	public DatashetsTableContents(@Nonnull DatashetsSemanticColumns columnsSingleValued, @Nonnull DatashetsSemanticColumns columnsMultiValued, List<DatashetsRow> rows)
 	{
+		requireNonNull(columnsSingleValued);
+		requireNonNull(columnsMultiValued);
+		
+		Set<String> uidOverlap = columnsSingleValued.getUIDOverlapWith(columnsMultiValued);
+		if (!uidOverlap.isEmpty())
+			throw new IllegalArgumentException("Overlap between single and multi valued columns' UIDs!!: "+uidOverlap);
+		
 		this.columnsSingleValued = columnsSingleValued;
 		this.columnsMultiValued = columnsMultiValued;
 		this.rows = rows;
