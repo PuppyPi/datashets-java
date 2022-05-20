@@ -85,13 +85,16 @@ public class DatashetsTableContents
 	
 	
 	/**
-	 * @return it's just a plain list of {@link DatashetsRow}s, fully writable and {@link #setRows(List) changeable}!
+	 * @return it's just a plain list of {@link DatashetsRow}s and nulls, fully writable and {@link #setRows(List) changeable}!
 	 */
 	public List<DatashetsRow> getRows()
 	{
 		return rows;
 	}
 	
+	/**
+	 * @param rows  (a live reference will be kept to it!)
+	 */
 	public void setRows(List<DatashetsRow> rows)
 	{
 		this.rows = rows;
@@ -202,20 +205,20 @@ public class DatashetsTableContents
 	
 	
 	/**
-	 * Adds a new blank row to the end, returning it if you want to edit it!<br>
+	 * Adds a new row with all blank (null) cells to the end, returning it in case you want to edit it!<br>
 	 * (Its index will be = {@link #getNumberOfRows()} just before this is called :3 )<br>
 	 * <br>
 	 * The lists in multivalued columns will be writable but (initially) empty lists.<br>
 	 */
-	public DatashetsRow addBlankRow()
+	public DatashetsRow addRow()
 	{
-		return addBlankRow(null);
+		return addRow(null);
 	}
 	
 	/**
-	 * Like {@link #addBlankRow()} but you get to set the value of newly-created cells (single-valued ones; multi-valued ones still start with each their own separate empty mutable list)
+	 * Like {@link #addRow()} but you get to set the value of newly-created cells (single-valued ones; multi-valued ones still start with each their own separate empty mutable list)
 	 */
-	public DatashetsRow addBlankRow(@Nullable String newSingleValuedCellValues)
+	public DatashetsRow addRow(@Nullable String newSingleValuedCellValues)
 	{
 		DatashetsRow row = new DatashetsRow();
 		
