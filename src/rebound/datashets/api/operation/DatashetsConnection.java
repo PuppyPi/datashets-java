@@ -19,7 +19,7 @@ public interface DatashetsConnection
 	
 	public default void write(DatashetsTable contents) throws DatashetsStructureException, IOException
 	{
-		perform(true, d -> contents);
+		perform(true, d -> contents);  //if reading the sheet is actually unnecessary if not used by the client code (and thus inefficient)..then override write()!  XD  :3
 	}
 	
 	
