@@ -1,5 +1,6 @@
 package rebound.datashets.api.operation;
 
+import java.util.Date;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import rebound.datashets.api.model.DatashetsSemanticColumns;
@@ -16,4 +17,18 @@ public interface DatashetsOperation
 	 * @throws RuntimeException  anything thrown by this will be caught and handled properly (maintenance will write its changes, but no client code changes will be written)
 	 */
 	public @Nullable DatashetsTable performInMemory(@Nonnull DatashetsTable data) throws RuntimeException;
+	
+	
+	
+	public static interface DatashetsOperationWithDataTimestamp
+	extends DatashetsOperation
+	{
+		public @Nullable DatashetsTable performInMemory(@Nonnull DatashetsTable data, @Nullable Date lastModifiedTimeOfOriginalData) throws RuntimeException;
+		
+		@Override
+		public default DatashetsTable performInMemory(DatashetsTable data) throws RuntimeException
+		{
+			return performInMemory(data, null);
+		}
+	}
 }
